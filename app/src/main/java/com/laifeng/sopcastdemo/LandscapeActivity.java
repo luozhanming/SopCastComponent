@@ -129,7 +129,9 @@ public class LandscapeActivity extends Activity {
                     mLFLiveView.stop();
                     isRecording = false;
                 } else {
-                    mUploadDialog.show();
+                    mRtmpSender.setAddress("rtmp://192.168.16.79:1935/live/android_test_push");
+                    mRtmpSender.connect();
+                //    mUploadDialog.show();
                 }
             }
         });
@@ -144,30 +146,30 @@ public class LandscapeActivity extends Activity {
         AlertDialog.Builder uploadBuilder = new AlertDialog.Builder(this);
         uploadBuilder.setTitle("Upload Address");
         uploadBuilder.setView(playView);
-        mUploadDialog = uploadBuilder.create();
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String uploadUrl = mAddressET.getText().toString();
-                if(TextUtils.isEmpty(uploadUrl)) {
-                    Toast.makeText(LandscapeActivity.this, "Upload address is empty!", Toast.LENGTH_SHORT).show();
-                } else {
-                    mRtmpSender.setAddress(uploadUrl);
-                    mProgressConnecting.setVisibility(View.VISIBLE);
-                    Toast.makeText(LandscapeActivity.this, "start connecting", Toast.LENGTH_SHORT).show();
-                    mRecordBtn.setBackgroundResource(R.mipmap.ic_record_stop);
-                    mRtmpSender.connect();
-                    isRecording = true;
-                }
-                mUploadDialog.dismiss();
-            }
-        });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mUploadDialog.dismiss();
-            }
-        });
+//        mUploadDialog = uploadBuilder.create();
+//        okBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String uploadUrl = mAddressET.getText().toString();
+//                if(TextUtils.isEmpty(uploadUrl)) {
+//                    Toast.makeText(LandscapeActivity.this, "Upload address is empty!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    mRtmpSender.setAddress(uploadUrl);
+//                    mProgressConnecting.setVisibility(View.VISIBLE);
+//                    Toast.makeText(LandscapeActivity.this, "start connecting", Toast.LENGTH_SHORT).show();
+//                    mRecordBtn.setBackgroundResource(R.mipmap.ic_record_stop);
+//                    mRtmpSender.connect();
+//                    isRecording = true;
+//                }
+//                mUploadDialog.dismiss();
+//            }
+//        });
+//        cancelBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mUploadDialog.dismiss();
+//            }
+//        });
     }
 
     private void initLiveView() {
@@ -180,7 +182,7 @@ public class LandscapeActivity extends Activity {
         mLFLiveView.setCameraConfiguration(cameraConfiguration);
 
         VideoConfiguration.Builder videoBuilder = new VideoConfiguration.Builder();
-        videoBuilder.setSize(640, 360);
+        videoBuilder.setSize(1280, 720);
         mVideoConfiguration = videoBuilder.build();
         mLFLiveView.setVideoConfiguration(mVideoConfiguration);
 
@@ -223,7 +225,7 @@ public class LandscapeActivity extends Activity {
         mLFLiveView.setPacker(packer);
         //设置发送器
         mRtmpSender = new RtmpSender();
-        mRtmpSender.setVideoParams(640, 360);
+        mRtmpSender.setVideoParams(1280, 720);
         mRtmpSender.setAudioParams(AudioConfiguration.DEFAULT_FREQUENCY, 16, false);
         mRtmpSender.setSenderListener(mSenderListener);
         mLFLiveView.setSender(mRtmpSender);
